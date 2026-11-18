@@ -1,0 +1,438 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background:
+          radial-gradient(circle at 50% 0%, #1b2a4a 0%, #070b14 70%),
+          #070b14;
+  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  color: #ffffff;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-wrapper {
+  width: min(960px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ================= HUD ================= */
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.hud-item {
+  flex: 1 1 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 10px;
+  background: linear-gradient(180deg, #223050 0%, #131c2e 100%);
+  border: 2px solid #3b5583;
+  border-radius: 10px;
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.hud-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #8fb3e8;
+}
+
+.hud-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffd54a;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+.hud-record .hud-value { color: #ff9147; }
+.hud-coin .hud-value { color: #ffe066; }
+.hud-level .hud-value { color: #8ce6a4; }
+
+/* ================= Канвас ================= */
+.canvas-container {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #3b5583;
+  box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.7),
+          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  background: #87ceeb;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  background: #87ceeb;
+  image-rendering: auto;
+  touch-action: none;
+}
+
+/* ================= Кнопка звука ================= */
+.sound-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(10, 20, 40, 0.6);
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: transform 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.sound-btn:hover { background: rgba(10, 20, 40, 0.85); transform: scale(1.08); }
+.sound-btn.muted { opacity: 0.55; }
+
+/* ================= Оверлей ================= */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(6, 10, 20, 0.85);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.25s ease;
+}
+
+.overlay.hidden { opacity: 0; pointer-events: none; }
+
+.overlay h1 {
+  font-size: clamp(26px, 6vw, 54px);
+  letter-spacing: 2px;
+  color: #ffd54a;
+  text-shadow:
+          0 4px 0 #b8860b,
+          0 6px 2px rgba(0, 0, 0, 0.5),
+          0 10px 24px rgba(0, 0, 0, 0.6);
+}
+
+.overlay-instructions {
+  max-width: 600px;
+  font-size: clamp(13px, 2.2vw, 17px);
+  line-height: 1.9;
+  color: #cfe0ff;
+}
+
+.overlay-instructions .key {
+  display: inline-block;
+  padding: 1px 7px;
+  margin: 0 1px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  background: #1f2b45;
+  border: 1px solid #3b5583;
+  color: #ffd54a;
+}
+
+#overlayHint {
+  max-width: 560px;
+  font-size: clamp(12px, 2vw, 15px);
+  line-height: 1.6;
+  color: #8fb3e8;
+}
+
+#startBtn {
+  margin-top: 10px;
+  padding: 14px 38px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #1a1200;
+  background: linear-gradient(180deg, #ffe066 0%, #ffb300 100%);
+  border: 2px solid #ffeb80;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #a06f00, 0 10px 20px rgba(255, 179, 0, 0.3);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+#startBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #a06f00, 0 12px 26px rgba(255, 179, 0, 0.5); }
+#startBtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #a06f00, 0 4px 10px rgba(255, 179, 0, 0.3); }
+
+/* ================= Мобильные кнопки (по умолчанию скрыты) ================= */
+.mobile-controls {
+  display: none;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.touch-group {
+  display: flex;
+  gap: 12px;
+}
+
+.touch-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  font-family: inherit;
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  color: #ffffff;
+  background: linear-gradient(180deg, #3d5a8a 0%, #1e3a5a 100%);
+  border: 2px solid #5a7ab0;
+  box-shadow:
+          0 5px 0 #0a1a2a,
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.06s;
+  -webkit-user-select: none;
+}
+
+.touch-btn.active,
+.touch-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+          0 1px 0 #0a1a2a,
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.15);
+}
+
+.touch-btn.jump {
+  background: linear-gradient(180deg, #ffe066 0%, #ffb300 100%);
+  color: #1a1200;
+  border-color: #ffeb80;
+  box-shadow:
+          0 5px 0 #a06f00,
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.touch-btn.jump.active,
+.touch-btn.jump:active {
+  box-shadow:
+          0 1px 0 #a06f00,
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ================= Тексты для мобилки/десктопа ================= */
+.mobile-only { display: none; }
+
+/* ================================================
+   МОБИЛЬНАЯ ВЕРСИЯ — полный экран, без прокрутки
+   ================================================ */
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  html, body {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    overscroll-behavior: none;
+    touch-action: none;
+  }
+
+  body {
+    display: block;
+    padding:
+            env(safe-area-inset-top, 0)
+            env(safe-area-inset-right, 0)
+            env(safe-area-inset-bottom, 0)
+            env(safe-area-inset-left, 0);
+    background: #070b14;
+  }
+
+  .game-wrapper {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .hud {
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px 4px 0;
+    flex-shrink: 0;
+  }
+
+  .hud-item {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 4px 4px;
+    border-width: 1.5px;
+    border-radius: 8px;
+  }
+
+  .hud-label {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hud-value { font-size: 14px; }
+
+  .canvas-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #070b14;
+    overflow: hidden;
+  }
+
+  canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  .sound-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .overlay {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .overlay h1 {
+    font-size: clamp(24px, 7vw, 42px);
+  }
+
+  .overlay-instructions {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  #overlayHint { font-size: 12px; line-height: 1.5; }
+
+  #startBtn {
+    padding: 16px 44px;
+    font-size: 17px;
+    min-height: 52px;
+  }
+
+  .mobile-controls {
+    display: flex;
+    padding: 8px 12px 10px;
+  }
+
+  .desktop-only { display: none; }
+  .mobile-only { display: block; }
+
+  /* Кнопки приглушаются, когда оверлей (пауза/меню) виден */
+  body:not(.playing) .mobile-controls {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+}
+
+/* Очень узкие экраны — компактнее */
+@media (max-width: 380px) {
+  .hud-item { padding: 3px 3px; }
+  .hud-label { font-size: 8px; }
+  .hud-value { font-size: 12px; }
+  .touch-btn { width: 62px; height: 62px; font-size: 22px; }
+  .touch-group { gap: 8px; }
+  .mobile-controls { padding: 6px 10px 8px; }
+}
+
+/* Мобилка в ландшафте — ещё компактнее, кнопки по краям */
+@media (max-width: 900px) and (orientation: landscape) {
+  .hud {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    background: rgba(10, 20, 40, 0.7);
+    border-radius: 10px;
+    padding: 3px;
+    backdrop-filter: blur(6px);
+    width: auto;
+    max-width: 60%;
+    pointer-events: none;
+  }
+  .hud-item {
+    padding: 2px 6px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .hud-label { display: none; }
+  .hud-value { font-size: 13px; }
+
+  .canvas-container {
+    padding: 0;
+    overflow: visible;
+  }
+
+  .mobile-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom, 0);
+    padding: 0 20px 12px;
+    background: linear-gradient(0deg, rgba(7,11,20,0.85) 0%, rgba(7,11,20,0) 100%);
+    pointer-events: none;
+  }
+  .mobile-controls .touch-group {
+    pointer-events: auto;
+  }
+  body:not(.playing) .mobile-controls { opacity: 0.35; }
+
+  .touch-btn { width: 68px; height: 68px; font-size: 24px; }
+}

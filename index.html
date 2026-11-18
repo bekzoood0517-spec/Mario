@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0f1c">
+    <meta name="format-detection" content="telephone=no">
+    <title>Super Mario — мини-игра</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="game-wrapper">
+    <div class="hud">
+        <div class="hud-item">
+            <span class="hud-label">Счёт</span>
+            <span id="score" class="hud-value">0</span>
+        </div>
+        <div class="hud-item hud-record">
+            <span class="hud-label">Рекорд</span>
+            <span id="highscore" class="hud-value">0</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">Жизни</span>
+            <span id="lives" class="hud-value">3</span>
+        </div>
+        <div class="hud-item hud-coin">
+            <span class="hud-label">Монеты</span>
+            <span id="coins" class="hud-value">0</span>
+        </div>
+        <div class="hud-item hud-level">
+            <span class="hud-label">Уровень</span>
+            <span id="levelNum" class="hud-value">1/2</span>
+        </div>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="game" width="960" height="540"></canvas>
+
+        <button id="soundBtn" class="sound-btn" aria-label="Звук" title="Звук">🔊</button>
+
+        <div id="overlay" class="overlay">
+            <h1 id="overlayTitle">Super Mario</h1>
+            <p id="overlayText" class="overlay-instructions desktop-only">
+                <span class="key">←</span><span class="key">→</span> или
+                <span class="key">A</span><span class="key">D</span> — движение<br>
+                <span class="key">Space</span>
+                <span class="key">W</span>
+                <span class="key">↑</span> — прыжок<br>
+                <span class="key">Enter</span> — быстрый старт
+            </p>
+            <p class="overlay-instructions mobile-only">
+                Держи <strong>◀ ▶</strong> для движения,<br>
+                тапай <strong>▲</strong> чтобы прыгнуть
+            </p>
+            <p id="overlayHint">
+                Собирай монеты, прыгай на головы врагов и доберись до флага!
+            </p>
+            <button id="startBtn">Начать игру</button>
+        </div>
+    </div>
+
+    <div class="mobile-controls">
+        <div class="touch-group">
+            <button id="btnLeft" class="touch-btn" data-action="left" aria-label="Влево">◀</button>
+            <button id="btnRight" class="touch-btn" data-action="right" aria-label="Вправо">▶</button>
+        </div>
+        <div class="touch-group">
+            <button id="btnJump" class="touch-btn jump" data-action="jump" aria-label="Прыжок">▲</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
